@@ -1,5 +1,8 @@
 // business logic
+
 var banks = [];
+
+
 var Bank = function(inputtedName, inputtedPinNumber, initialDeposit) {
   this.name = inputtedName;
   this.pinNumber = inputtedPinNumber;
@@ -7,19 +10,30 @@ var Bank = function(inputtedName, inputtedPinNumber, initialDeposit) {
   this.accountNumber = Math.floor(100000 + Math.random() * 900000);
 }
 
+// banks[masterAccount] = new Bank("Master", "1111", "0" );
+
+
 Bank.prototype.withdraw = function(amount) {
   if (amount === "all") {
     this.balance = 0;
   } else if (this.balance > parseFloat(amount)) {
-  this.balance -= parseFloat(amount);
+    this.balance -= parseFloat(amount);
   } else {
-  alert("I'm sorry, your balance of " + this.balance + " is less than the withdrawal of " + amount);
+    alert("I'm sorry, your balance of " + this.balance + " is less than the withdrawal of " + amount);
   }
 }
 
 
 Bank.prototype.deposit = function(amount) {
   this.balance += parseFloat(amount);
+}
+
+var returnTotal = function() {
+  var final = 0;
+  for (i = 0; i < banks.length; i++) {
+    final += banks[i].balance;
+  }
+  console.log(final);
 }
 
 var clearFields = function() {
@@ -29,6 +43,11 @@ var clearFields = function() {
   $('#accountNumber').val('');
   $('#pin').val('');
   $('#amount').val('');
+}
+
+var clearAll = function() {
+  clearFields();
+  $('#output').text('');
 }
 
 
@@ -46,7 +65,7 @@ $(document).ready(function() {
 
       banks.push(newBank);
       $("#output").text("");
-      $("#output").append("Thanks " + newBank.name + ". Your new bank account number is " + newBank.accountNumber + ". It has a initial deposit of $" + newBank.balance + ".<br>");
+      $("#output").append("Thanks " + newBank.name + ". Your new bank account number is account#" + newBank.accountNumber + ". It has a initial deposit of $" + newBank.balance + ".<br>");
 
     } else {
       alert("Please input proper information to start an account.");
@@ -64,13 +83,16 @@ $(document).ready(function() {
       for (var i = 0; i < banks.length; i ++) {
         if (banks[i].accountNumber === parseInt(accountNumber)) {
           if (banks[i].pinNumber === pin) {
-            if($("select#type").val() === "Withdraw") {
+            if ($("select#type").val() === "Withdraw") {
               banks[i].withdraw(amount);
               found = 1;
               index = i;
-            } else {
+            } else if ($("select#type").val() === "Deposit") {
               banks[i].deposit(amount);
               found = 2;
+              index = i;
+            } else if ($("select#type").val() === "Balance") {
+              found = 3;
               index = i;
             }
           }
@@ -82,11 +104,17 @@ $(document).ready(function() {
         $("#output").append("Thanks using Epicodus Bank. You withdrew " + amount + " from bank account#" + banks[index].accountNumber + ". Your remaining balance is $" + banks[index].balance + ".<br>");
       } else if (found === 2) {
         $("#output").append("Thanks using Epicodus Bank. You deposited " + amount + " to bank account#" + banks[index].accountNumber + ". Your balance is $" + banks[index].balance + ".<br>");
+      } else if (found === 3) {
+        $("#output").append("Thanks using Epicodus Bank. Your balance is  $" + banks[index].balance + ".<br>");
+      } else {
+        alert("Please input proper information to make a transaction.");
       }
-    } else {
-      alert("Please input proper information to make a transaction.");
-    }
-    clearFields();
-  });
+      clearFields();
+      }
+    });
 
-});
+    $('button#clearAll').click(function() {
+      clearAll();
+    });
+
+  });
