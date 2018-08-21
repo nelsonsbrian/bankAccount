@@ -14,42 +14,51 @@
   <body>
     <div class="container">
       <h1 class="animated bounce">Bank Account</h1>
-      <div class="form-group black">
-        <label for="sel1">Choose your movie:</label>
-        <select class="form-control black" id="movie">
-          <option class="movieSelect" id='77'>Michael Clayton</option>
-          <option class="movieSelect" id='88'>Ocean's Eleven</option>
-          <option class="movieSelect" id='99'>The Incredibles 2</option>
-          <option class="movieSelect" id='33'>Up</option>
-        </select>
+      <div class="row">
+        <div class="col-md-6">
+          <h2>Create a new Account</h2>
+          <form id="newAccount">
+            <div class="form-group">
+              <label for="initName">New Account Name:</label>
+              <input id="initName" class="form-control" type="text">
+            </div>
+            <div class="form-group">
+              <label for="initPin">Enter Pin Number:</label>
+              <input id="initPin" class="form-control" type="text">
+            </div>
+            <div class="form-group">
+              <label for="initDep">Enter Initial Deposit:</label>
+              <input id="initDep" class="form-control" type="text">
+            </div>
+            <button type="button" id='newAcct' class="btn">Create New Account</button>
+          </form>
+        </div>
+        <div class="col-md-6">
+          <h2>Make a Transaction</h2>
+          <form id="transaction">
+            <div class="form-group">
+              <label for="accountNumber">Account Number:</label>
+              <input id="accountNumber" class="form-control" type="text">
+            </div>
+            <div class="form-group">
+              <label for="pin">Enter Pin Number:</label>
+              <input id="pin" class="form-control" type="text">
+            </div>
+            <div class="form-group">
+              <label for="amount">Amount (type 'all' to withdraw all available funds)</label>
+              <input id="amount" class="form-control" type="text">
+            </div>
+            <div class="form-group">
+              <label for="type">Select Time:</label>
+              <select class="form-control black" id="type">
+                <option class="typeSelect">Withdraw</option>
+                <option class="typeSelect">Deposit</option>
+              </select>
+            </div>
+            <button type="button" id='trans' class="btn">Confirm Transaction</button>
+          </form>
+        </div>
       </div>
-      <div class="form-group">
-        <label for="sel1">Choose your age group:</label>
-        <select class="form-control white" id="age">
-          <option class="ageSelect">Under 13</option>
-          <option class="ageSelect">13-18</option>
-          <option class="ageSelect">19-59</option>
-          <option class="ageSelect">60+</option>
-        </select>
-      </div>
-      <div class="form-group black">
-        <label for="sel1">Select Time:</label>
-        <select class="form-control black" id="time">
-          <option class="timeSelect">11:00</option>
-          <option class="timeSelect">3:00</option>
-          <option class="timeSelect">6:30</option>
-          <option class="timeSelect">9:00</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label for="sel1">Please select your preferred viewing experience:</label>
-        <select class="form-control white" id="type">
-          <option class="typeSelect">Regular</option>
-          <option class="typeSelect">3D</option>
-          <option class="typeSelect">IMAX</option>
-        </select>
-      </div>
-      <button type="button" id='buy' name="button">Buy Ticket</button>
       <div id="output">
 
       </div>

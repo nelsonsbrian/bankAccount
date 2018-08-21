@@ -1,27 +1,9 @@
-.ticketImage{
-    background-image: url('../img/paper.jpg');
-    padding: 10px;
-    width: 30%;
-    font-family: cursive;
-}
-.outputImage {
-  width: 30%;
-  height: 30%;
-}
 
-#outputTotal {
-  background-image: url('../img/paper.jpg');
-  padding: 10px;
-  width: 30%;
-  text-align: right;
-  display: none;
-  font-family: cursive;
-}
 body {
   background-color: black;
 }
 
-h1 {
+h1, h2 {
   text-align: center;
   color: white;
 }
@@ -33,19 +15,15 @@ button {
   margin-bottom: 15px;
 }
 
-#movieType {
-  width: 30%;
-}
 
 label {
   width: 425px;
 
 }
 
-select#age, select#type, select#movie, select#time {
-  width: 50%;
+#output {
+  color: white;
 }
-
 #show-place {
   display: none;
 }

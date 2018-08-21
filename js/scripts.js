@@ -1,82 +1,92 @@
 // business logic
-var ticketArray = [];
-var Ticket = function(movieName, age, time, price) {
-  this.movieName = movieName;
-  this.age = age;
-  this.time = time;
-  this.price = price;
-  this.imgFile = findImage(movieName);
+var banks = [];
+var Bank = function(inputtedName, inputtedPinNumber, initialDeposit) {
+  this.name = inputtedName;
+  this.pinNumber = inputtedPinNumber;
+  this.balance = initialDeposit;
+  this.accountNumber = Math.floor(100000 + Math.random() * 900000);
 }
 
-var findImage = function(movieName) {
-  if (movieName === "Ocean's Eleven") {
-    return "img/oceansEleven.jpeg";
-  } else if (movieName === "The Incredibles 2") {
-    return "img/incredibles2.jpeg";
-  } else if (movieName === "Up") {
-    return "img/up.jpeg";
+Bank.prototype.withdraw = function(amount) {
+  if (amount === "all") {
+    this.balance = 0;
+  } else if (this.balance > parseFloat(amount)) {
+  this.balance -= parseFloat(amount);
   } else {
-    return "img/michaelClayton.jpg"
+  alert("I'm sorry, your balance of " + this.balance + " is less than the withdrawal of " + amount);
   }
 }
 
-var priceCalculation = function(inputtedMovie, inputtedAge, inputtedTime, inputtedType) {
-  var price = 10;
-  if (inputtedMovie === "Ocean's Eleven") {
-    price -= 2;
-  }
-  if (inputtedMovie === "The Incredibles 2") {
-    price += 2;
-  }
-  if (inputtedAge === "60+" || inputtedAge === "Under 13") {
-    price -= 2;
-  }
-  if (inputtedTime === "11:00" || inputtedTime === "3:00") {
-    price -= 2;
-  }
 
-  if (inputtedType === "3D") {
-    price += 5;
-  }
-
-  if (inputtedType === "IMAX") {
-    price += 7;
-  }
-  return price;
+Bank.prototype.deposit = function(amount) {
+  this.balance += parseFloat(amount);
 }
 
-var tax = function(inputPrice) {
-  inputPrice = (0.095 * inputPrice).toFixed(2);
-  return inputPrice;
+var clearFields = function() {
+  $('#initName').val('');
+  $('#initPin').val('');
+  $('#initDep').val('');
+  $('#accountNumber').val('');
+  $('#pin').val('');
+  $('#amount').val('');
 }
+
+
 // user logic
 $(document).ready(function() {
-  var total = 0;
-  $('button#buy').click(function() {
-    $("#outputTotal").show();
-    total = 0;
-    var inputtedMovie = $("#movie").val();
-    var inputtedAge = $("#age").val();
-    var inputtedTime = $("#time").val();
-    var inputtedType = $("#type").val();
-    var newTicket = new Ticket(inputtedMovie, inputtedAge, inputtedTime, priceCalculation(inputtedMovie, inputtedAge, inputtedTime, inputtedType));
-    ticketArray.push(newTicket);
-    $("#output").text("");
-    $("#outputTotal").text("");
-    for (var i = 0; i < ticketArray.length; i++) {
 
-    $("#output").append("<div class='ticketImage'>Movie: " + ticketArray[i].movieName + "<br>Time Showing: " + ticketArray[i].time + "<br>Ticket Price: $" + ticketArray[i].price + ".00" + "</div>");
-    var img = $('<img />',
-                  {class:'ticketImage',
-                   src: ticketArray[i].imgFile
-                 }).appendTo($("#output"));
-    total += ticketArray[i].price;
-  }
-    $("#outputTotal").append("<hr>Subtotal: $" + total + ".00")
-    $("#outputTotal").append("<br>Tax: $" + tax(total));
-    total = parseFloat(total) + parseFloat(tax(total));
-    $("#outputTotal").append("<br><strong>Total Price: $" + total + "</strong>");
+  //New Account Form
+  $('button#newAcct').click(function() {
+    var inputName = $('#initName').val();
+    var inputPin = $('#initPin').val();
+    var inputDep = parseFloat($('#initDep').val());
 
-    // select element input grab - for later *
+    if (inputName !== "" && inputPin.length === 4 && inputDep >= 50) {
+      var newBank = new Bank(inputName, inputPin, inputDep);
+
+      banks.push(newBank);
+      $("#output").text("");
+      $("#output").append("Thanks " + newBank.name + ". Your new bank account number is " + newBank.accountNumber + ". It has a initial deposit of $" + newBank.balance + ".<br>");
+
+    } else {
+      alert("Please input proper information to start an account.");
+    }
+    clearFields();
   });
+  //Make a transaction Form
+  $('button#trans').click(function() {
+    var accountNumber = $('#accountNumber').val();
+    var pin = $('#pin').val();
+    var amount = $('#amount').val();
+    if (accountNumber.length === 6 && pin.length === 4 && amount !== "") {
+      var found = 0;
+      var index;
+      for (var i = 0; i < banks.length; i ++) {
+        if (banks[i].accountNumber === parseInt(accountNumber)) {
+          if (banks[i].pinNumber === pin) {
+            if($("select#type").val() === "Withdraw") {
+              banks[i].withdraw(amount);
+              found = 1;
+              index = i;
+            } else {
+              banks[i].deposit(amount);
+              found = 2;
+              index = i;
+            }
+          }
+        }
+      }
+      if (found === 0) {
+        alert("Cannot find your account or invalid pin number");
+      } else if (found === 1) {
+        $("#output").append("Thanks using Epicodus Bank. You withdrew " + amount + " from bank account#" + banks[index].accountNumber + ". Your remaining balance is $" + banks[index].balance + ".<br>");
+      } else if (found === 2) {
+        $("#output").append("Thanks using Epicodus Bank. You deposited " + amount + " to bank account#" + banks[index].accountNumber + ". Your balance is $" + banks[index].balance + ".<br>");
+      }
+    } else {
+      alert("Please input proper information to make a transaction.");
+    }
+    clearFields();
+  });
+
 });
